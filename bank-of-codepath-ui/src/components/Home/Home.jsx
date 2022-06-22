@@ -7,13 +7,28 @@ import axios from "axios"
 
 export default function Home(props) {
 
-  const handleOnSubmitNewTransaction = () =>{
-    props.setNewTransactionForm
+  const handleOnCreateTransaction = async() => {
+    props.setIsCreating(true)
+    try{
+      let json = await axios.post('http://localhost:3001/bank/transaction', {
+        description: props.newTransactionForm.description,
+        category: props.newTransactionForm.category,
+        amount: props.newTransactionForm.amount
+      })
+      console.log(json)
+      props.setTransactions((state)=>[...state, {...json, id:json.id}])
+      props.setNewTransactionForm({})
+      props.setIsCreating(false)
   }
+    catch(error) {
+      props.setError(error);
+      props.setIsCreating(false)
+    }
+}
 
   async function getTransactions(){
     try{
-      let json = await axios.get("/bank/transactions")
+      let json = await axios.get("http://localhost:3001/bank/transactions")
       props.setTransactions(json.data.transactions)
       props.setIsLoading(false)
     }catch(err){
@@ -23,7 +38,7 @@ export default function Home(props) {
 
   async function getTransfers(){
     try{
-      let json = await axios.get("/bank/transfers")
+      let json = await axios.get("http://localhost:3001/bank/transfers")
       props.setTransfers(json.data.transfers)
       props.setIsLoading(false)
     }catch(err){
@@ -52,7 +67,7 @@ export default function Home(props) {
     return (
       <div className="home">
         <AddTransaction isCreating={props.isCreating} setIsCreating={props.setIsCreating} form={props.newTransactionForm} 
-        setForm={props.setNewTransactionForm} handleOnSubmit={handleOnSubmitNewTransaction}/>
+        setForm={props.setNewTransactionForm} handleOnSubmit={handleOnCreateTransaction}/>
           <h1>Loading...</h1>
       </div>
     )
@@ -69,7 +84,7 @@ export default function Home(props) {
       return (
         <div className="home">
           <AddTransaction isCreating={props.isCreating} setIsCreating={props.setIsCreating} form={props.newTransactionForm} 
-          setForm={props.setNewTransactionForm} handleOnSubmit={handleOnSubmitNewTransaction}/>
+          setForm={props.setNewTransactionForm} handleOnSubmit={handleOnCreateTransaction}/>
           <BankActivity transactions={filteredTransactions}/>
         </div>
       )

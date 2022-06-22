@@ -1,8 +1,15 @@
 import * as React from "react"
 import { formatAmount, formatDate } from "../../utils/format"
 import "./TransactionDetail.css"
+import { useState } from "react"
 
 export default function TransactionDetail() {
+
+  const [hasFetched, setHasFetched] = useState(false)
+  const [transaction, setTransaction] = useState({})
+  const [isLoading, setIsLoading] = useState()
+  const [error, setError] = useState()
+
   return (
     <div className="transaction-detail">
       <TransactionCard />

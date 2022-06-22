@@ -4,9 +4,7 @@ import "./AddTransaction.css"
 export default function AddTransaction(props) {
   
   const handleOnFormFieldChange = (change) => {
-    console.log(change.target)
-    props.setForm((form)=>({...form, [change.target.name]: change.target.value}))
-    console.log(props.form)
+    props.setForm({[change.target.name]: change.target.value})
   }
 
   return (
@@ -25,15 +23,15 @@ export function AddTransactionForm(props) {
       <div className="fields">
         <div className="field">
           <label>Description</label>
-          <input name="description" value={props.form.description} onChange={props.handleOnFormFieldChange}/>
+          <input name="description" value={props.form ? props.form.description : ""} onChange={props.handleOnFormFieldChange}/>
         </div>
         <div className="field">
           <label>Category</label>
-          <input name="category" value={props.form.category} onChange={props.handleOnFormFieldChange}/>
+          <input name="category" value={props.form ? props.form.category : ""} onChange={props.handleOnFormFieldChange}/>
         </div>
         <div className="field half-flex">
           <label>Amount (cents)</label>
-          <input name="amount" value={props.form.amount} onChange={props.handleOnFormFieldChange} type="number"/>
+          <input name="amount" value={props.form ? props.form.amount : ""} onChange={props.handleOnFormFieldChange} type="number"/>
         </div>
 
         <button className="btn add-transaction" type="submit" onClick={props.handleOnSubmit}>
