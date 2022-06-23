@@ -36,13 +36,13 @@ export default function TransactionDetail() {
 
   return (
     <div className="transaction-detail">
-      <TransactionCard transaction={transaction} transactionId={transactionId}/>
+      <TransactionCard transaction={transaction} transactionId={transactionId} isLoading={isLoading} hasFetched={hasFetched}/>
     </div>
   )
 }
 
-export function TransactionCard({ transaction, transactionId}) {
-  if(transaction == undefined || transaction.category == undefined){
+export function TransactionCard({ transaction, transactionId, isLoading, hasFetched}) {
+  if(!transaction || Object.keys(transaction).length == 0 && !isLoading && hasFetched){
     return(
       <div className="transaction-card card">
       <div className="card-header">
