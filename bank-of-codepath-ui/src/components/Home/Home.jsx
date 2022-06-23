@@ -7,23 +7,21 @@ import axios from "axios"
 
 export default function Home(props) {
 
-  const handleOnCreateTransaction = async() => {
-    props.setIsCreating(true)
-    try{
-      let json = await axios.post('http://localhost:3001/bank/transaction', {
-        description: props.newTransactionForm.description,
-        category: props.newTransactionForm.category,
-        amount: props.newTransactionForm.amount
+  async function handleOnSubmitNewTransaction() {
+      props.setIsCreating(true)
+      axios.post('http://localhost:3001/bank/transactions', {
+        transaction: props.newTransactionForm
       })
-      console.log(json)
-      props.setTransactions((state)=>[...state, {...json, id:json.id}])
-      props.setNewTransactionForm({})
-      props.setIsCreating(false)
-  }
-    catch(error) {
+      .then((res)=>{
+        props.setTransactions((state)=>[...state, res.data.transaction])
+        props.setNewTransactionForm({category: "", description: "", amount: 0})
+        props.setIsCreating(false)
+        console.log(props.transactions)
+      })
+    .catch((error)=> {
       props.setError(error);
       props.setIsCreating(false)
-    }
+    })
 }
 
   async function getTransactions(){
@@ -67,7 +65,7 @@ export default function Home(props) {
     return (
       <div className="home">
         <AddTransaction isCreating={props.isCreating} setIsCreating={props.setIsCreating} form={props.newTransactionForm} 
-        setForm={props.setNewTransactionForm} handleOnSubmit={handleOnCreateTransaction}/>
+        setForm={props.setNewTransactionForm} handleOnSubmit={handleOnSubmitNewTransaction}/>
           <h1>Loading...</h1>
       </div>
     )
@@ -84,7 +82,7 @@ export default function Home(props) {
       return (
         <div className="home">
           <AddTransaction isCreating={props.isCreating} setIsCreating={props.setIsCreating} form={props.newTransactionForm} 
-          setForm={props.setNewTransactionForm} handleOnSubmit={handleOnCreateTransaction}/>
+          setForm={props.setNewTransactionForm} handleOnSubmit={handleOnSubmitNewTransaction}/>
           <BankActivity transactions={filteredTransactions}/>
         </div>
       )

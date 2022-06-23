@@ -7,6 +7,7 @@ export default function AddTransaction(props) {
     props.setForm({[change.target.name]: change.target.value})
   }
 
+
   return (
     <div className="add-transaction">
       <h2>Add Transaction</h2>
